@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Кастомные стили */
+body {
+  @apply text-gray-900;
+}
+
+/* Анимация для пузырей сообщений */
+.message-bubble {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для скроллбара */
+.chat-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
