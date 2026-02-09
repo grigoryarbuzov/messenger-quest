@@ -94,10 +94,12 @@ export default function ChatPage({
   }, []);
 
   const initializeSession = async () => {
+    console.log('🚀 initializeSession запущена для персонажа:', params.character);
     const { loadCharacterData, loadMessages, addMessage, initGame } = await import('@/lib/localStorage');
 
     // Загружаем данные из LocalStorage
     let characterData = loadCharacterData(params.character);
+    console.log('📦 characterData:', characterData);
 
     if (characterData) {
       // Есть сохранённые данные - загружаем их
@@ -109,6 +111,7 @@ export default function ChatPage({
           isPlayer: msg.isPlayer,
           emotion: msg.emotion,
           timestamp: new Date(msg.timestamp),
+          image: msg.image,
         }));
 
         setMessages(loadedMessages);
@@ -134,7 +137,13 @@ export default function ChatPage({
     // Остальные персонажи (anna, boris, viktor) начинают с пустым чатом
     if (params.character === 'helper') {
       const messages = loadMessages(params.character);
-      if (messages.length > 0) {
+      console.log('💬 Загружено сообщений для helper:', messages.length, messages);
+
+      // ИСПРАВЛЕНИЕ: Если первое сообщение НЕ содержит картинку - пересоздаём приветствие
+      const needsRecreate = messages.length === 0 || !messages[0].image;
+
+      if (messages.length > 0 && !needsRecreate) {
+        console.log('📚 Загружаем СТАРЫЕ сообщения с картинкой');
         const loadedMessages = messages.map((msg) => ({
           text: msg.text,
           isPlayer: msg.isPlayer,
@@ -145,6 +154,16 @@ export default function ChatPage({
         setMessages(loadedMessages);
       } else {
         // Первое приветствие от помощника с изображением места преступления
+        console.log('🎬 Создаём НОВОЕ приветственное сообщение с картинкой для helper (старые сообщения будут удалены)');
+
+        // Очищаем старые сообщения helper
+        const gameData = localStorage.getItem('quest_messenger_save');
+        if (gameData) {
+          const parsed = JSON.parse(gameData);
+          parsed.characters.helper.messages = [];
+          localStorage.setItem('quest_messenger_save', JSON.stringify(parsed));
+        }
+
         const welcomeMessage: Message = {
           text: 'Доброе утро. Вчера в 23:15 директор компании "НейроТех" Павел Громов найден мёртвым в своём кабинете.\n\nОфициально - сердечный приступ. Но есть основания полагать что это убийство.\n\nВаша задача: допросить подозреваемых и найти убийцу. Начните с Анны Соколовой - секретаря директора.',
           isPlayer: false,
@@ -152,6 +171,7 @@ export default function ChatPage({
           timestamp: new Date(),
           image: '/images/messages/crime_scene.png',
         };
+        console.log('📸 Сообщение с картинкой:', welcomeMessage);
         setMessages([welcomeMessage]);
         addMessage(params.character, welcomeMessage.text, false, 'neutral', welcomeMessage.image);
       }

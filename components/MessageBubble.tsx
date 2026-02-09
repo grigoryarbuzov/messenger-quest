@@ -13,6 +13,11 @@ export default function MessageBubble({
   timestamp,
   image,
 }: MessageBubbleProps) {
+  // Debug логирование
+  if (image) {
+    console.log('🖼️ MessageBubble получил image:', image);
+  }
+
   const timeStr = timestamp.toLocaleTimeString('ru-RU', {
     hour: '2-digit',
     minute: '2-digit',
