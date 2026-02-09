@@ -11,6 +11,7 @@ export default function MessageBubble({
   isPlayer,
   emotion,
   timestamp,
+  image,
 }: MessageBubbleProps) {
   const timeStr = timestamp.toLocaleTimeString('ru-RU', {
     hour: '2-digit',
@@ -33,6 +34,18 @@ export default function MessageBubble({
         {!isPlayer && emotion && emotion !== 'neutral' && (
           <div className="text-xs opacity-60 mb-0.5">
             {EMOTION_EMOJI[emotion]}
+          </div>
+        )}
+
+        {/* Изображение (если есть) */}
+        {image && (
+          <div className="mb-2">
+            <img
+              src={image}
+              alt="Attachment"
+              className="rounded-lg max-w-full h-auto"
+              style={{ maxHeight: '300px' }}
+            />
           </div>
         )}
 

@@ -9,6 +9,7 @@ interface StoredMessage {
   isPlayer: boolean;
   emotion?: Emotion;
   timestamp: string;
+  image?: string; // URL изображения
 }
 
 interface CharacterData {
@@ -148,7 +149,8 @@ export function addMessage(
   characterName: CharacterName,
   text: string,
   isPlayer: boolean,
-  emotion?: Emotion
+  emotion?: Emotion,
+  image?: string
 ): void {
   let gameData = getGameData();
 
@@ -164,6 +166,7 @@ export function addMessage(
     isPlayer,
     emotion,
     timestamp: new Date().toISOString(),
+    image,
   };
 
   gameData.characters[characterName].messages.push(message);

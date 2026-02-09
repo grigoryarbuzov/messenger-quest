@@ -40,6 +40,7 @@ interface Message {
   isPlayer: boolean;
   emotion?: Emotion;
   timestamp: Date;
+  image?: string; // URL изображения
 }
 
 export default function ChatPage({
@@ -139,8 +140,20 @@ export default function ChatPage({
           isPlayer: msg.isPlayer,
           emotion: msg.emotion,
           timestamp: new Date(msg.timestamp),
+          image: msg.image,
         }));
         setMessages(loadedMessages);
+      } else {
+        // Первое приветствие от помощника с изображением места преступления
+        const welcomeMessage: Message = {
+          text: 'Доброе утро. Вчера в 23:15 директор компании "НейроТех" Павел Громов найден мёртвым в своём кабинете.\n\nОфициально - сердечный приступ. Но есть основания полагать что это убийство.\n\nВаша задача: допросить подозреваемых и найти убийцу. Начните с Анны Соколовой - секретаря директора.',
+          isPlayer: false,
+          emotion: 'neutral',
+          timestamp: new Date(),
+          image: '/images/messages/crime_scene.png',
+        };
+        setMessages([welcomeMessage]);
+        addMessage(params.character, welcomeMessage.text, false, 'neutral', welcomeMessage.image);
       }
     } else {
       // Для anna, boris, viktor - пустой чат, нет приветствия
@@ -650,6 +663,7 @@ export default function ChatPage({
                 isPlayer={msg.isPlayer}
                 emotion={msg.emotion}
                 timestamp={msg.timestamp}
+                image={msg.image}
               />
             </div>
           ))}

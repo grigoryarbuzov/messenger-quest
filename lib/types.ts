@@ -82,6 +82,7 @@ export interface MessageBubbleProps {
   isPlayer: boolean;
   emotion?: Emotion;
   timestamp: Date;
+  image?: string; // URL изображения (опционально)
 }
 
 // ============================================
