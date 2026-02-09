@@ -356,6 +356,10 @@ export default function ChatPage({
       }
 
       // 3. Анализируем сообщение через AI
+      // Получаем ВСЕ собранные улики ПЕРЕД анализом
+      const evidenceForAnalysis = getAllEvidence();
+      const revealedSecretIdsForAnalysis = evidenceForAnalysis.map(e => e.id);
+
       const analysisResponse = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -364,7 +368,7 @@ export default function ChatPage({
           playerMessage,
           currentTrust: trust,
           currentEmotion: emotion,
-          revealedSecrets: [],
+          revealedSecrets: revealedSecretIdsForAnalysis, // ✅ Передаём реальные улики
         }),
       });
 
